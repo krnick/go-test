@@ -4,29 +4,38 @@ package main
 
 import (
 	"fmt"
+	"go-test/helper"
+	"sync"
+	"time"
 )
+
+var wg = sync.WaitGroup{}
 
 func main() {
 
-	var conference_name = "nick conf"
-	const constant_ticket = 50
-	conference_name = "123"
-	fmt.Println("hello", conference_name, " world ")
-	fmt.Println("hello", constant_ticket, " world ")
-
-	fmt.Printf("hello world %v \n", conference_name)
-
-	// variable
-
-	var email string
 	var ticket uint
-	email = "sung@"
-	// ticket = -1  this will overflow since the uint, it could not be the native number
-	fmt.Print(email)
-	fmt.Print(ticket)
 
-	var user_name = ""
-	fmt.Scan(&user_name)
-	fmt.Println(user_name)
+	fmt.Println("Hello world, welcome to ticket order system")
+	fmt.Println("Please type the number of the ticket you want to book")
 
+	fmt.Scan(&ticket)
+
+	fmt.Printf("your ticket number is %v \n", ticket)
+
+	helper.Say_hello()
+
+	//send_mail()
+	wg.Add(1)
+	go send_mail() // but the main thread won't wait for it, so it need to use three function in waitgroud
+	wg.Wait()
+
+}
+
+func send_mail() {
+	// which take lots of time here
+	// we need to do it concurrency, it can simply put 'go' keyword before call this function
+	fmt.Println("Sending your email right now")
+	time.Sleep(10 * time.Second)
+	fmt.Println("Done for sending mail")
+	wg.Done() // it will decrease 1 the number of wg.add(1)
 }
